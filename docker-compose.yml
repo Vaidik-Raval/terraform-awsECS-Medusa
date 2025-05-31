@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  medusa:
+    build: .
+    container_name: medusa-backend
+    ports:
+      - "9000:9000" # Expose port 9000 (backend)
+    environment:
+      - DATABASE_URL=postgres://postgres:password@postgres:5432/medusa_db # Connect to the Postgres container
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13
+    container_name: medusa-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: medusa_db
+    ports:
+      - "5432:5432" # Expose Postgres port 5432
+    volumes:
+      - medusa-db-data:/var/lib/postgresql/data
+
+volumes:
+  medusa-db-data:
